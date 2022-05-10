@@ -59,7 +59,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useForm, useField } from 'vee-validate'
-import { object, string, number, ref } from 'yup'
+import { object, string, ref } from 'yup'
 import { postUser } from '@/service/api/users'
 
 export default defineComponent({
