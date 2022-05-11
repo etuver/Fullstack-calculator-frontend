@@ -2,19 +2,18 @@ import axios from 'axios'
 import { AUTH_URL, USER_URL } from '@/service/api/ApiUrls'
 
 export async function getToken (
-  username: string,
+  email: string,
   password: string
 ): Promise<string> {
   return axios
     .post(AUTH_URL, {
-      username: username,
+      email: email,
       password: password
     })
     .then((response) => {
       if (!response.data.token) {
         throw new Error('Token from endpoint was empty.')
       }
-
       return response.data.token
     })
     .catch((error) => {
@@ -25,13 +24,11 @@ export async function getToken (
 
 export async function postUser (
   email: string,
-  name: string,
   password: string
 ) {
   return axios
     .post(USER_URL, {
       email: email,
-      name: name,
       password: password
     })
     .then(() => {
@@ -62,7 +59,6 @@ export async function getUser (token: string) {
 export async function putUser (
   token: string,
   email: string,
-  name: string,
   password: string
 ) {
   return axios
@@ -70,7 +66,6 @@ export async function putUser (
       USER_URL,
       {
         email: email,
-        name: name,
         password: password
       },
       {
