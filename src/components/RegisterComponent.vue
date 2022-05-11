@@ -3,15 +3,6 @@
     <v-container>
       <v-row>
         <v-col class="d-flex flex-row mt-5 .rounded-xl">
-          <v-text-field
-            label="Fornavn"
-            placeholder="Ola Nordmann"
-            variant="outlined"
-            v-model="name"
-            type="text"
-            class="mr-5"
-            :error-messages="errors.name"
-          ></v-text-field>
         </v-col>
         <v-col cols="12">
           <v-text-field
@@ -61,6 +52,7 @@ import { defineComponent } from 'vue'
 import { useForm, useField } from 'vee-validate'
 import { object, string, ref } from 'yup'
 import { postUser } from '@/service/api/users'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   data: () => ({
@@ -68,8 +60,9 @@ export default defineComponent({
     show2: false
   }),
   setup () {
+    const router = useRouter()
+
     const validationSchema = object({
-      name: string().required('Dette feltet er påkrevd'),
       email: string().required().email('Fyll inn en gyldig mailadresse'),
       password: string().required('Dette feltet er påkrevd'),
       confirmPassword: string()
@@ -81,7 +74,6 @@ export default defineComponent({
       validationSchema
     })
 
-    const { value: name } = useField('name')
     const { value: email } = useField('email')
     const { value: password } = useField('password')
     const { value: confirmPassword } = useField('confirmPassword')
@@ -89,19 +81,17 @@ export default defineComponent({
     const submit = handleSubmit((values) => {
       if (
         values.email &&
-        values.name &&
         values.password
       ) {
         postUser(
           values.email,
-          values.name,
           values.password
         )
+        router.push({ name: 'login' })
       }
     })
 
     return {
-      name,
       email,
       password,
       confirmPassword,
