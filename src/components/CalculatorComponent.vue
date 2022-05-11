@@ -1,7 +1,7 @@
 <template>
 
   <div class="calculator">
-    <div class="display">{{current || '0'}}</div>
+    <div class="display">{{current}}</div>
     <div @click="clear" class="buttonRED">AC</div>
     <div @click="del" class="buttonRED">DEL</div>
     <div @click="inverse" class="button">+/-</div>
@@ -34,202 +34,122 @@
   </div> <!-- the end -->
 </template>
 
-<script>
+<script setup lang="ts">
 
-import axios from 'axios'
+import { ref } from 'vue'
+import { postExpression } from '@/service/api/Expression'
+import { useStore } from 'vuex'
 
-export default {
+const store = useStore()
 
-  components: {
-  },
+const current = ref('')
 
-  data () {
-    return {
-      current: '',
-      operator: null, // is this used anymore?
-      prev: null, // is this used anymore?
-      operatorClicked: false, // is this used anymore?
-      first: null,
-      second: null,
-      operrrator: null,
-      calculations: [],
-      fullcalc: null,
-      expression: null,
+const clear = () => {
+  current.value = ''
+}
 
-      reviews: [],
-      tabs: ['review-form', 'review-list'],
-      activeTab: 'review-form'
+const del = () => {
+  current.value = current.value.slice(0, -1)
+}
 
-    }
-  },
-  methods: {
-    clear () {
-      this.current = ''
-      this.calculations.splice(0)
-      this.first = null
-      this.operator = null
-    },
-    append (number) {
-      this.current = `${this.current}${number}`
-    },
-    comma () {
-      if (this.current.indexOf('.') === -1) {
-        this.append('.')
-      }
-    },
-    inverse () {
-      this.current = this.current.charAt(0) === '-'
-        ? this.current.slice(1)
-        : `-${this.current}`
-    },
-    del () {
-      const lst = this.current.slice(0, -1)
-      this.current = lst
-    },
-    divide () {
-      if (this.current === '') {
-        return
-      }
-      this.controlOperrator()
-      this.calculcate()
-      this.current += '/'
-      this.operator = (a, b) => a / b
-      this.setPrev()
-      this.first = this.current
-      this.operrrator = '/'
-    },
-    multiply () {
-      if (this.current === '') {
-        return
-      }
-      this.controlOperrator()
-      this.calculcate()
-      this.current += '*'
-      this.operator = (a, b) => a * b
-      this.first = this.current
-      this.operrrator = '*'
-      this.setPrev()
-    },
-    plus () {
-      if (this.current === '') {
-        return
-      }
-      this.controlOperrator()
-      this.calculcate()
-      this.current += '+'
-      this.operator = (a, b) => a + b
-      // this.setPrev();
-      this.first = this.current
-      this.operrrator = '+'
-    },
-    minus () {
-      if (this.current === '') {
-        return
-      }
-      this.controlOperrator()
-      this.calculcate()
-      this.current += '-'
-      this.operator = (a, b) => a - b
-      this.first = this.current
-      this.operrrator = '-'
-      this.setPrev()
-    },
-    async result () {
-      // let res = "";
-      this.fullcalc = this.current
-      this.oktransferdata()
-
-      // this.sendApiExp()
-      // this.getApiRes()
-
-      // this.fullcalc += "=";
-      // if (this.fullcalc.length >10){
-      //  this.fullcalc +="\n";
-      // }
-      // this.fullcalc += this.res;
-      // this.calculations.push({calculation: this.fullcalc});
-      // this.current = res; //mm
-    },
-    oktransferdata () {
-      this.sendApiExp()
-      this.getApiRes()
-    },
-
-    sendApiExp () {
-      console.log('Post:' + this.fullcalc)
-      const expression = this.fullcalc
-      axios.post('http://localhost:8080/exp', {
-        expression: expression
-      })
-        .then((response) => {
-          console.log('respons her?' + response)
-          // this.res = response.result;
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    getApiRes () {
-      let res = ''
-      axios.get('http://localhost:8080/result')
-        .then(response => {
-          // let resp = JSON.stringify(response)
-          console.log('res: ' + response.data[0].result)
-          res = response.data[0].result
-
-          // let data = resp.data[0];
-          // console.log(JSON.parse(data.result))
-          // let resp = response.data[0];
-          // console.log("yeyeyeyeye"+JSON.parse(resp))
-          // res = resp.result;
-          this.fullcalc += '='
-          if (this.fullcalc.length > 10) {
-            this.fullcalc += '\n'
-          }
-          this.fullcalc += res
-          this.calculations.push({ calculation: this.fullcalc })
-          this.current = res // mm
-        })
-    },
-    setPrev () {
-      this.prev = this.current
-      this.operatorClicked = true
-    },
-
-    /**
-     * dersom siste tegn er en operator, fjern den og erstatt
-     * mattestykket kan ikke ha 2 operatorer
-     */
-    controlOperrator () {
-      const lst = this.current.charAt(this.current.length - 1)
-      if (lst === '+' || lst === '-' || lst === '/' || lst === '*' || lst === '-') {
-        this.current = this.current.substring(0, this.current.length - 1)
-      }
-    },
-
-    /**
-     * Mellomregning dersom det er to operatorer
-     */
-    calculcate () {
-      const math = this.current
-      if (math.includes('+') || math.includes('-') || math.includes('*') || math.includes('/')) {
-        // const lst = this.current.charAt(this.current.length -1);
-        this.result()
-        const lastmath = this.calculations.at(this.calculations.length - 1).calculation.toString()
-        this.current = lastmath.split('=')[1]
-      }
-    },
-
-    updateHistory () {
-
-    },
-
-    addReview (review) {
-      this.reviews.push(review)
-    }
-
+const comma = () => {
+  if (current.value.indexOf('.') === -1) {
+    append('.')
   }
 }
+
+const inverse = () => {
+  const first = current.value.charAt(0)
+  if (first === '-') {
+    current.value = current.value.substring(1)
+  } else {
+    current.value = '-' + current.value
+  }
+}
+
+const append = (num: string) => {
+  current.value += num
+}
+
+const plus = () => {
+  if (current.value === '') {
+    return
+  }
+  checkOperator()
+  if (!checkStringOperator()) {
+    return
+  }
+  current.value += '+'
+  console.log('token::::')
+  console.log(store.state.email)
+}
+
+const minus = () => {
+  if (current.value === '') {
+    return
+  }
+  checkOperator()
+  if (!checkStringOperator()) {
+    return
+  }
+  current.value += '-'
+}
+
+const divide = () => {
+  if (current.value === '') {
+    return
+  }
+  checkOperator()
+  if (!checkStringOperator()) {
+    return
+  }
+  current.value += '/'
+}
+
+const multiply = () => {
+  if (current.value === '') {
+    return
+  }
+  checkOperator()
+  if (!checkStringOperator()) {
+    return
+  }
+  current.value += '*'
+}
+
+/**
+ * If last item is a operator replace it
+ */
+const checkOperator = () => {
+  const lst = current.value.charAt(current.value.length - 1)
+  if (lst === '+' || lst === '-' || lst === '/' || lst === '*' || lst === '-') {
+    current.value = current.value.substring(0, current.value.length - 1)
+  }
+}
+
+const checkStringOperator = () => {
+  const math = current.value
+  if (math.includes('+') || math.includes('-') || math.includes('*') || math.includes('/')) {
+    return false
+  }
+  return true
+}
+
+const result = () => {
+  console.log('getres')
+  postExpression(
+    store.getters.token,
+    current.value
+  )
+    .then((data) => {
+      if (data) {
+        alert('success')
+      } else {
+        alert('Something went wrong')
+      }
+    })
+}
+
 </script>
 
 <style scoped>
