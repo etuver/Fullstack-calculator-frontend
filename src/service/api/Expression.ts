@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { EXPRESSION_URL } from '@/service/api/ApiUrls'
+import store from '@/store'
 
 export async function postExpression (
   token: string,
@@ -8,7 +9,8 @@ export async function postExpression (
   return axios
     .post(EXPRESSION_URL,
       {
-        expression: expression
+        expression: expression,
+        expressionUserEmail: store.state.email
       },
       {
         headers: {
@@ -16,8 +18,9 @@ export async function postExpression (
         }
       }
     )
-    .then(() => {
-      return true
+    .then((response) => {
+      console.log(response.data)
+      return response.data
     })
     .catch(() => {
       return false

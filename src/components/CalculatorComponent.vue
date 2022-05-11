@@ -80,8 +80,6 @@ const plus = () => {
     return
   }
   current.value += '+'
-  console.log('token::::')
-  console.log(store.state.email)
 }
 
 const minus = () => {
@@ -143,7 +141,7 @@ const result = () => {
   )
     .then((data) => {
       if (data) {
-        alert('success')
+        current.value = data
       } else {
         alert('Something went wrong')
       }
