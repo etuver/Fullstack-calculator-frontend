@@ -128,10 +128,16 @@ const checkOperator = () => {
 }
 
 const checkStringOperator = () => {
-  const math = current.value
-  if (math.includes('+') || math.includes('-') || math.includes('*') || math.includes('/')) {
+  let math = current.value
+  if (math.includes('+') || math.includes('*') || math.includes('/')) {
     return false
+  } else if (math.charAt(0) === '-') {
+    math = math.substring(1)
+    if (math.includes('-')) {
+      return false
+    }
   }
+
   return true
 }
 
