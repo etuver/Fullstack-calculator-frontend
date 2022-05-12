@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { AUTH_URL, USER_URL } from '@/service/api/ApiUrls'
+import store from '@/store'
 
 export async function getToken (
   email: string,
@@ -44,7 +45,7 @@ export async function getUser (token: string) {
   return axios
     .get(USER_URL, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authentication: `Bearer ${store.state.token}`
       }
     })
     .then((response) => {
