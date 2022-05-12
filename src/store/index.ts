@@ -4,7 +4,9 @@ export default createStore({
   state: {
     token: '',
     email: '',
-    name: ''
+    name: '',
+    calculations: [],
+    nCalculations: 0
   },
   getters: {
     token (state) {
@@ -26,6 +28,10 @@ export default createStore({
     },
     SET_EMAIL (state, email) {
       state.email = email
+    },
+    ADD_LOG (state, calculation) {
+      // @ts-ignore
+      state.calculations.push(calculation)
     }
   },
   actions: {
@@ -34,6 +40,12 @@ export default createStore({
     },
     setEmail (context, { email }) {
       context.commit('SET_TOKEN', email)
+    },
+    saveLog ({ commit }, calculation) {
+      commit('ADD_LOG', {
+        ...calculation,
+        id: this.state.nCalculations++
+      })
     },
     setUserInfo (
       context,
