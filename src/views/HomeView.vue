@@ -1,17 +1,14 @@
 <template>
   <div class="home">
   </div>
-  <CalculatorComponent/>
+  <CalculatorComponent v-if="store.getters.isLoggedIn"/>
+  <v-container align="center" v-if="!store.getters.isLoggedIn">Vennligst logg inn for å bruke kalkulatoren</v-container>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import CalculatorComponent from '@/components/CalculatorComponent.vue' // @ is an alias to /src
+<script setup lang="ts">
+import CalculatorComponent from '@/components/CalculatorComponent.vue'
+import { useStore } from 'vuex' // @ is an alias to /src
 
-export default defineComponent({
-  name: 'HomeView',
-  components: {
-    CalculatorComponent
-  }
-})
+const store = useStore()
+
 </script>
