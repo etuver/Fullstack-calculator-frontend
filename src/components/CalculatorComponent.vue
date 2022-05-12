@@ -21,22 +21,22 @@
     <div @click="append('0')" class="zero">0</div>
     <div @click="comma" class="button">.</div>
     <div @click="result" class="buttonResult">=</div>
-    <div class="history"  auto-grow ref="history">
-      <h5>Log</h5>
+    <v-container class="history"  auto-grow ref="history">
+      <h5 align="center">Logg</h5>
       <ul>
-        <li v-for="calc in calculations" :key="calc">
+        <li v-for="calc in calculations.reverse()" :key="calc">
           {{calc.expression}}
 
         </li>
       </ul>
 
-    </div>
+    </v-container>
   </div> <!-- the end -->
 </template>
 
 <script setup lang="ts">
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getHistory, postExpression } from '@/service/api/Expression'
 import { useStore } from 'vuex'
 
@@ -161,6 +161,10 @@ const updateLog = () => {
     calculations.value = data
   })
 }
+
+onMounted(() => {
+  updateLog()
+})
 
 </script>
 
