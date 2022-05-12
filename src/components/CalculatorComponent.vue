@@ -21,16 +21,12 @@
     <div @click="append('0')" class="zero">0</div>
     <div @click="comma" class="button">.</div>
     <div @click="result" class="buttonResult">=</div>
-    <v-container class="history"  auto-grow ref="history">
-      <h5 align="center">Logg</h5>
-      <ul>
-        <li v-for="calc in calculations.reverse()" :key="calc">
+      <v-list class="history">
+        <v-list-header>Historikk</v-list-header>
+        <v-list-item v-for="calc in calculations.reverse()" :key="calc">
           {{calc.expression}}
-
-        </li>
-      </ul>
-
-    </v-container>
+        </v-list-item>
+      </v-list>
   </div> <!-- the end -->
 </template>
 
