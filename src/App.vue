@@ -7,7 +7,7 @@
       <v-btn to="/register" v-if="!store.getters.isLoggedIn"  class="mr-5">Registrer</v-btn>
       </v-col>
       <v-col align="center" class="ma-5">
-      <v-label > {{ loggedInEmail }} </v-label>
+      <v-label> {{ store.getters.email }} </v-label>
       </v-col>
       <router-view></router-view>
     </v-main>
