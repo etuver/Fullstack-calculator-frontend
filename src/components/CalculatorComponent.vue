@@ -25,7 +25,7 @@
       <h5>Log</h5>
       <ul>
         <li v-for="calc in calculations" :key="calc">
-          {{calc.calculation}}
+          {{calc.expression}}
 
         </li>
       </ul>
@@ -37,19 +37,21 @@
 <script setup lang="ts">
 
 import { ref } from 'vue'
-import { postExpression } from '@/service/api/Expression'
+import { getHistory, postExpression } from '@/service/api/Expression'
 import { useStore } from 'vuex'
 
 const store = useStore()
 
 const current = ref('')
+const calculations = ref(store.state.calculations)
 
 const clear = () => {
   current.value = ''
 }
 
 const del = () => {
-  current.value = current.value.slice(0, -1)
+  const temp = current.value.slice(0, -1)
+  current.value = temp
 }
 
 const comma = () => {
@@ -145,7 +147,13 @@ const result = () => {
       } else {
         alert('Something went wrong')
       }
-    })
+    }).then(updateLog)
+}
+
+const updateLog = () => {
+  getHistory().then((data) => {
+    calculations.value = data
+  })
 }
 
 </script>
