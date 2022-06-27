@@ -22,7 +22,7 @@
     <div @click="comma" class="button">.</div>
     <div @click="result" class="buttonResult">=</div>
       <v-list class="history">
-        <v-list-header>Historikk</v-list-header>
+        <v-list-header class="align-center ml-15">Historikk</v-list-header>
         <v-list-item v-for="calc in calculations.reverse()" :key="calc">
           {{calc.expression}}
         </v-list-item>
